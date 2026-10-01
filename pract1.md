@@ -10,7 +10,18 @@ cat /etc/protocols | grep -v '^#' | grep -v '^\$' | awk '{print \$2, \$1}' | sor
 
 ## Задача 3
 ```
-t="Hello from RTU MIREA!"; p=\${t//?/-}; p=-\(p-; echo +\)p+; echo "| \(t \vert{}"; echo +\)p+
+text="$1"
+
+length=${#text}
+
+border=""
+for (( i=0; i<length+2; i++ )); do
+    border+="-"
+done
+
+echo "+${border}+"
+echo "| ${text} |"
+echo "+${border}+"
 ```
 
 ## Задача 4
