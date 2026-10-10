@@ -73,25 +73,14 @@ find . -type f -exec md5sum {} + | sort | uniq -w 32 -d
 
 ## Задача 8
 ```
-echo 'find "\${2:-.}" -maxdepth 1 -type f -name "*.\$1" | tar -cf archive.tar -T -' > archiver.sh
-chmod +x archiver.sh
-./archiver.sh txt
+find . -name "*.$1" | xargs tar -cvf "$2"
 ```
 
 ## Задача 9
 ```
-#!/bin/sh
-input=\$1
-output=\$2
-sed 's/ /\t/g' "\(input" > "\)output"
+sed 's/    /\t/g' "$1" > "$2"
 ```
 ## Задача 10
 ```
-#!/bin/sh
-dir=\$1
-for file in "\$dir"/*; do
-    if [ -f "\(file" ] && [ ! -s "\)file" ]; then
-        echo "\$file"
-    fi
-done
+find "$1" -type f -empty
 ```
