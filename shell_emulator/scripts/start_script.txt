@@ -5,3 +5,6 @@ cd dir1
 ls
 cd ..
 ls
+# Тест ошибки
+cd nonexistent
+ls

@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QFont
 from .parser import parse_command
 from .commands import CommandHandler
+from .vfs import VFS
 
 
 class EmulatorWindow(QMainWindow):
@@ -17,6 +18,7 @@ class EmulatorWindow(QMainWindow):
         """Инициализация окна."""
         super().__init__()
         self.config = None
+        self.vfs = VFS()
         self._setup_window()
         self._setup_ui()
         self.handler = CommandHandler(self)
@@ -47,7 +49,9 @@ class EmulatorWindow(QMainWindow):
 
         self.input_field = QLineEdit()
         self.input_field.setFont(QFont("Consolas", 10))
-        self.input_field.returnPressed.connect(self._on_enter)
+        self.input_field.returnPressed.connect(
+            self._on_enter
+        )
         input_layout.addWidget(self.input_field)
 
         layout.addLayout(input_layout)

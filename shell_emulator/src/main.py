@@ -30,6 +30,15 @@ def main():
     window.config = config
     window.append_text(config.dump())
 
+    if config.vfs_path:
+        try:
+            window.vfs.load(config.vfs_path)
+            window.append_text(
+                f"VFS загружена: {config.vfs_path}"
+            )
+        except (ValueError, FileNotFoundError) as e:
+            window.append_text(f"Ошибка загрузки VFS: {e}")
+
     runner = ScriptRunner(window)
     runner.run(config.script_path)
 
