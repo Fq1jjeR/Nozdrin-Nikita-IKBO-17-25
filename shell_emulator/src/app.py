@@ -6,8 +6,8 @@ from PyQt6.QtWidgets import (
     QTextEdit, QLineEdit, QLabel, QHBoxLayout
 )
 from PyQt6.QtGui import QFont
-from parser import parse_command
-from commands import CommandHandler
+from .parser import parse_command
+from .commands import CommandHandler
 
 
 class EmulatorWindow(QMainWindow):
@@ -16,6 +16,7 @@ class EmulatorWindow(QMainWindow):
     def __init__(self):
         """Инициализация окна."""
         super().__init__()
+        self.config = None
         self._setup_window()
         self._setup_ui()
         self.handler = CommandHandler(self)
@@ -67,6 +68,14 @@ class EmulatorWindow(QMainWindow):
         result = self.handler.execute(command, args)
         if result is not None:
             self.output.append(result)
+
+    def append_text(self, text):
+        """Добавляет текст в область вывода."""
+        self.output.append(text)
+
+    def process_command(self, text):
+        """Обрабатывает команду из скрипта."""
+        self._process_input(text)
 
     def quit(self):
         """Завершение работы приложения."""
