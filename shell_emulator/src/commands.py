@@ -21,14 +21,32 @@ class CommandHandler:
         return handler(args)
 
     def _cmd_ls(self, args):
-        """Заглушка команды ls."""
-        return f"ls: {args}"
+        """Команда ls — вывод содержимого директории."""
+        vfs = self.app.vfs
+        if vfs is None or vfs.root is None:
+            return "ls: VFS не загружена"
+        try:
+            if args:
+                target = vfs._resolve(args[0])
+                items = vfs.list_dir(target)
+            else:
+                items = vfs.list_dir()
+            return ' '.join(items)
+        except (ValueError, FileNotFoundError) as e:
+            return f"ls: {e}"
 
     def _cmd_cd(self, args):
-        """Заглушка команды cd."""
+        """Команда cd — смена текущей директории."""
+        vfs = self.app.vfs
+        if vfs is None or vfs.root is None:
+            return "cd: VFS не загружена"
         if not args:
-            return "Ошибка: cd требует аргумент"
-        return f"cd: {args}"
+            return "cd: не указан путь"
+        try:
+            vfs.change_dir(args[0])
+            return None
+        except (ValueError, FileNotFoundError) as e:
+            return f"cd: {e}"
 
     def _cmd_exit(self, args):
         """Команда выхода из эмулятора."""
