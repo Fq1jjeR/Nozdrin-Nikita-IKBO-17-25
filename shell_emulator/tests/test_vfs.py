@@ -14,7 +14,7 @@ from src.vfs import VFS
 class TestVFS(unittest.TestCase):
     """Набор тестов для VFS."""
 
-    def setUp(self):
+    def SetUp(self):
         """Создание тестовой структуры директорий."""
         self.tmp = tempfile.mkdtemp()
         os.makedirs(os.path.join(self.tmp, 'dir1'))
@@ -28,7 +28,7 @@ class TestVFS(unittest.TestCase):
         ) as f:
             f.write('world')
 
-    def tearDown(self):
+    def TearDown(self):
         """Удаление тестовой структуры."""
         shutil.rmtree(self.tmp)
 
