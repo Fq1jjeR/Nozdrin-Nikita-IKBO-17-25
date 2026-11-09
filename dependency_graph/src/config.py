@@ -22,6 +22,8 @@ MAX_DEPTH_DEFAULT = 10
 MAX_DEPTH_MIN = 1
 MAX_DEPTH_MAX = 100
 OUTPUT_DEFAULT = "graph.png"
+MODE_DEFAULT = "config"
+MODE_CHOICES = ("config", "deps", "graph", "reverse", "viz")
 PACKAGE_NAME_PATTERN = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*$")
 OUTPUT_FORBIDDEN_CHARS = ("/", "\\", os.sep)
 
@@ -36,6 +38,7 @@ class AppConfig:
         test_mode: флаг режима работы с тестовым репозиторием.
         output: имя сгенерированного файла с изображением графа.
         max_depth: максимальная глубина анализа зависимостей.
+        mode: режим работы приложения (config, deps, graph, ...).
     """
 
     package: str
@@ -43,6 +46,7 @@ class AppConfig:
     test_mode: bool
     output: str
     max_depth: int
+    mode: str = MODE_DEFAULT
 
 
 def validate_package(name: str) -> str:
@@ -201,6 +205,12 @@ def _add_optional_args(parser: argparse.ArgumentParser):
             f"(по умолчанию: {MAX_DEPTH_DEFAULT})"
         ),
     )
+    parser.add_argument(
+        "-m", "--mode",
+        choices=MODE_CHOICES,
+        default=MODE_DEFAULT,
+        help=f"режим работы (по умолчанию: {MODE_DEFAULT})",
+    )
 
 
 def parse_args(argv=None) -> AppConfig:
@@ -227,6 +237,7 @@ def parse_args(argv=None) -> AppConfig:
         test_mode=args.test_mode,
         output=output,
         max_depth=max_depth,
+        mode=args.mode,
     )
 
 
