@@ -1,0 +1,35 @@
+# Служебные файлы Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+
+# Артефакты сборки
+build/
+dist/
+
+# Виртуальные окружения
+.venv/
+venv/
+env/
+
+# Файлы окружения
+.env
+.env.local
+
+# Настройки редакторов
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Сгенерированные изображения графа
+*.png
+*.svg
