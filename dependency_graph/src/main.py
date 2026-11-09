@@ -3,11 +3,13 @@
 Поддерживает режимы работы:
     - config: вывод параметров (этап 1);
     - deps: вывод прямых зависимостей пакета (этап 2);
-    - graph: построение графа зависимостей (этап 3).
+    - graph: построение графа зависимостей (этап 3);
+    - reverse: обратные зависимости (этап 4).
 """
 
 import sys
 
+from .analyzer import format_reverse_deps, get_reverse_dependencies
 from .collector import get_direct_dependencies
 from .config import format_config, parse_args
 from .graph import format_graph, get_graph
@@ -68,6 +70,24 @@ def run_graph_mode(config) -> int:
     return 0
 
 
+def run_reverse_mode(config) -> int:
+    """Вывести обратные зависимости пакета.
+
+    Args:
+        config: конфигурация приложения.
+
+    Returns:
+        Код возврата: 0 при успехе, 1 при ошибке.
+    """
+    try:
+        deps = get_reverse_dependencies(config)
+    except (RuntimeError, ValueError) as exc:
+        print(f"Ошибка анализа: {exc}", file=sys.stderr)
+        return 1
+    print(format_reverse_deps(deps, config.package))
+    return 0
+
+
 def main(argv=None) -> int:
     """Запустить приложение в выбранном режиме.
 
@@ -88,6 +108,8 @@ def main(argv=None) -> int:
         return run_deps_mode(config)
     if config.mode == "graph":
         return run_graph_mode(config)
+    if config.mode == "reverse":
+        return run_reverse_mode(config)
     print(
         f"Режим {config.mode!r} ещё не реализован",
         file=sys.stderr,
