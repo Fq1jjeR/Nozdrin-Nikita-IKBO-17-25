@@ -2,13 +2,15 @@
 
 Поддерживает режимы работы:
     - config: вывод параметров (этап 1);
-    - deps: вывод прямых зависимостей пакета (этап 2).
+    - deps: вывод прямых зависимостей пакета (этап 2);
+    - graph: построение графа зависимостей (этап 3).
 """
 
 import sys
 
 from .collector import get_direct_dependencies
 from .config import format_config, parse_args
+from .graph import format_graph, get_graph
 
 
 def run_config_mode(config) -> int:
@@ -48,6 +50,24 @@ def run_deps_mode(config) -> int:
     return 0
 
 
+def run_graph_mode(config) -> int:
+    """Построить и вывести граф зависимостей.
+
+    Args:
+        config: конфигурация приложения.
+
+    Returns:
+        Код возврата: 0 при успехе, 1 при ошибке.
+    """
+    try:
+        graph = get_graph(config)
+    except (RuntimeError, ValueError) as exc:
+        print(f"Ошибка построения графа: {exc}", file=sys.stderr)
+        return 1
+    print(format_graph(graph, config.package))
+    return 0
+
+
 def main(argv=None) -> int:
     """Запустить приложение в выбранном режиме.
 
@@ -66,6 +86,8 @@ def main(argv=None) -> int:
         return run_config_mode(config)
     if config.mode == "deps":
         return run_deps_mode(config)
+    if config.mode == "graph":
+        return run_graph_mode(config)
     print(
         f"Режим {config.mode!r} ещё не реализован",
         file=sys.stderr,
