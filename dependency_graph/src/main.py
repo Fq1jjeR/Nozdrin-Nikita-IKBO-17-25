@@ -4,7 +4,8 @@
     - config: вывод параметров (этап 1);
     - deps: вывод прямых зависимостей пакета (этап 2);
     - graph: построение графа зависимостей (этап 3);
-    - reverse: обратные зависимости (этап 4).
+    - reverse: обратные зависимости (этап 4);
+    - viz: визуализация графа (этап 5).
 """
 
 import sys
@@ -13,6 +14,7 @@ from .analyzer import format_reverse_deps, get_reverse_dependencies
 from .collector import get_direct_dependencies
 from .config import format_config, parse_args
 from .graph import format_graph, get_graph
+from .visualizer import build_visualization
 
 
 def run_config_mode(config) -> int:
@@ -88,6 +90,34 @@ def run_reverse_mode(config) -> int:
     return 0
 
 
+def run_viz_mode(config) -> int:
+    """Сформировать DOT и сохранить изображение графа в PNG.
+
+    Args:
+        config: конфигурация приложения.
+
+    Returns:
+        Код возврата: 0 при успехе, 1 при ошибке.
+    """
+    try:
+        dot_text, ok = build_visualization(config)
+    except (RuntimeError, ValueError) as exc:
+        print(f"Ошибка визуализации: {exc}", file=sys.stderr)
+        return 1
+    print("Описание графа на языке DOT:")
+    print(dot_text)
+    print()
+    if ok:
+        print(f"Изображение сохранено в файл: {config.output}")
+    else:
+        print(
+            "Предупреждение: утилита dot недоступна, "
+            "изображение не сохранено.",
+            file=sys.stderr,
+        )
+    return 0
+
+
 def main(argv=None) -> int:
     """Запустить приложение в выбранном режиме.
 
@@ -110,6 +140,8 @@ def main(argv=None) -> int:
         return run_graph_mode(config)
     if config.mode == "reverse":
         return run_reverse_mode(config)
+    if config.mode == "viz":
+        return run_viz_mode(config)
     print(
         f"Режим {config.mode!r} ещё не реализован",
         file=sys.stderr,
