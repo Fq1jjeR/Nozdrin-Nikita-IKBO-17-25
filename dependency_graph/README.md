@@ -22,7 +22,8 @@
 dependency_graph/
 ├── .gitignore
 ├── README.md
-├── run.sh                 # скрипт запуска
+├── run.sh                 # скрипт запуска (Linux / macOS)
+├── run.bat                # скрипт запуска (Windows)
 ├── src/                   # исходный код
 │   ├── __init__.py
 │   ├── config.py          # разбор и валидация параметров (этап 1)
@@ -109,28 +110,89 @@ dependency_graph/
 
 Требуется Python 3.10+ и утилита `dot` из пакета Graphviz (для этапа 5).
 
+### Linux / macOS
+
 ```bash
 # Запуск приложения
 ./run.sh -p <пакет> -r <url|путь> -m <режим> [опции]
+
+# Или напрямую
+python3 -m src.main -p <пакет> -r <url|путь> -m <режим> [опции]
+```
+
+### Windows (PowerShell)
+
+```powershell
+# Запуск через .bat-скрипт
+.\run.bat -p <пакет> -r <url|путь> -m <режим> [опции]
+
+# Или напрямую через python
+python -m src.main -p <пакет> -r <url|путь> -m <режим> [опции]
+```
+
+### Установка Graphviz на Windows
+
+Утилита `dot` нужна только для режима `viz` (этап 5). Если при запуске
+`viz` появляется предупреждение «утилита dot недоступна», добавьте
+Graphviz в PATH:
+
+**Вариант A — на постоянку (применится после перезапуска терминала):**
+
+```powershell
+[Environment]::SetEnvironmentVariable(
+    "Path",
+    $env:Path + ";C:\Program Files\Graphviz\bin",
+    "User"
+)
+```
+
+**Вариант B — на текущую сессию PowerShell:**
+
+```powershell
+$env:Path += ";C:\Program Files\Graphviz\bin"
+dot -V   # проверка: должно вывести версию graphviz
 ```
 
 ## Запуск тестов
+
+### Linux / macOS
 
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
+### Windows (PowerShell)
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+Ожидаемый результат: `Ran 61 tests ... OK`.
+
 ## Примеры использования
+
+Ниже команды приведены парами: сначала для Linux/macOS, затем для Windows.
+В Windows в PowerShell обратная косая черта `\` в путях не требует
+экранирования; в CMD также работает прямой слэш `/`.
 
 ### Этап 1: вывод параметров
 
 ```bash
+# Linux / macOS
 ./run.sh -p serde -r https://github.com/serde-rs/serde -m config
+```
+
+```powershell
+# Windows (PowerShell)
+.\run.bat -p serde -r https://github.com/serde-rs/serde -m config
+# или
+python -m src.main -p serde -r https://github.com/serde-rs/serde -m config
 ```
 
 ### Этап 2: прямые зависимости
 
 ```bash
+# Linux / macOS
 # Тестовый файл Cargo.toml
 ./run.sh -p sample -r examples/sample_cargo.toml -t -m deps
 
@@ -138,9 +200,19 @@ python3 -m unittest discover -s tests -v
 ./run.sh -p regex -r https://github.com/rust-lang/regex -m deps
 ```
 
+```powershell
+# Windows (PowerShell)
+# Тестовый файл Cargo.toml
+.\run.bat -p sample -r examples\sample_cargo.toml -t -m deps
+
+# Реальный репозиторий
+.\run.bat -p regex -r https://github.com/rust-lang/regex -m deps
+```
+
 ### Этап 3: граф зависимостей
 
 ```bash
+# Linux / macOS
 # Линейный граф
 ./run.sh -p A -r examples/test_repo_linear.txt -t -m graph
 
@@ -151,16 +223,35 @@ python3 -m unittest discover -s tests -v
 ./run.sh -p A -r examples/test_repo_deep.txt -t -m graph -d 2
 ```
 
+```powershell
+# Windows (PowerShell)
+# Линейный граф
+.\run.bat -p A -r examples\test_repo_linear.txt -t -m graph
+
+# Циклический граф (цикл обрабатывается корректно)
+.\run.bat -p A -r examples\test_repo_cycle.txt -t -m graph
+
+# Ограничение глубины
+.\run.bat -p A -r examples\test_repo_deep.txt -t -m graph -d 2
+```
+
 ### Этап 4: обратные зависимости
 
 ```bash
+# Linux / macOS
 # Кто зависит от D в ромбовидном графе
 ./run.sh -p D -r examples/test_repo_diamond.txt -t -m reverse
+```
+
+```powershell
+# Windows (PowerShell)
+.\run.bat -p D -r examples\test_repo_diamond.txt -t -m reverse
 ```
 
 ### Этап 5: визуализация
 
 ```bash
+# Linux / macOS
 # Линейный граф → PNG
 ./run.sh -p A -r examples/test_repo_linear.txt -t -m viz -o linear.png
 
@@ -172,6 +263,56 @@ python3 -m unittest discover -s tests -v
 
 # Реальный репозиторий
 ./run.sh -p regex -r https://github.com/rust-lang/regex -m viz -o regex.png
+```
+
+```powershell
+# Windows (PowerShell)
+# Перед первым запуском добавьте dot в PATH (если ещё не добавили):
+$env:Path += ";C:\Program Files\Graphviz\bin"
+
+# Линейный граф → PNG
+.\run.bat -p A -r examples\test_repo_linear.txt -t -m viz -o linear.png
+
+# Ромбовидный граф → PNG
+.\run.bat -p A -r examples\test_repo_diamond.txt -t -m viz -o diamond.png
+
+# Циклический граф → PNG
+.\run.bat -p A -r examples\test_repo_cycle.txt -t -m viz -o cycle.png
+
+# Реальный репозиторий
+.\run.bat -p regex -r https://github.com/rust-lang/regex -m viz -o regex.png
+```
+
+## Открытие PNG-изображения
+
+Файл PNG сохраняется в текущую рабочую директорию (туда, откуда запущена
+команда) под именем, заданным параметром `--output` (по умолчанию
+`graph.png`).
+
+### Linux / macOS
+
+```bash
+# macOS — открыть в Preview
+open linear.png
+
+# Linux (GNOME/XDG)
+xdg-open linear.png
+```
+
+### Windows (PowerShell)
+
+```powershell
+# Открыть в просмотрщике по умолчанию (обычно «Фотографии»)
+Invoke-Item linear.png
+
+# Альтернатива — через команду start
+start linear.png
+
+# Через explorer
+explorer.exe linear.png
+
+# Открыть папку с PNG в Проводнике
+explorer.exe .
 ```
 
 ## Формат тестового репозитория
