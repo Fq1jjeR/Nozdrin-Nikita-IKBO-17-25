@@ -181,7 +181,7 @@ Get-Content examples\game.cl | python run.py -o examples\game.yaml
 ## Структура репозитория
 
 ```
-config_language/
+Home_Work_config_language/
 ├── src/
 │   └── config_lang/
 │       ├── __init__.py     — публичный API пакета
@@ -201,7 +201,7 @@ config_language/
 ├── requirements.txt
 ├── run.py                 — лаунчер CLI (главный, вызывается напрямую)
 ├── run.bat                — обёртка для Windows (вызывает run.py)
-└── README.md
+└── Home_Work_README.md
 ```
 
 ## Технологии

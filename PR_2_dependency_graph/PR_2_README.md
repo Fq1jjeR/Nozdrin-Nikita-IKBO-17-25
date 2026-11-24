@@ -19,9 +19,9 @@
 ## Структура репозитория
 
 ```
-dependency_graph/
+PR_2_dependency_graph/
 ├── .gitignore
-├── README.md
+├── PR_2_README.md
 ├── run.sh                 # скрипт запуска (Linux / macOS)
 ├── run.bat                # скрипт запуска (Windows)
 ├── src/                   # исходный код
