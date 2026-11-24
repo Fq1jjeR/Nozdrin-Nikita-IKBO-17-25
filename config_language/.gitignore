@@ -1,0 +1,34 @@
+# Байт-код Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Служебные файлы виртуальных окружений
+.venv/
+venv/
+env/
+
+# Артефакты сборки и дистрибутивы
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Результаты тестирования
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Файлы настроек редактора кода
+.vscode/
+.idea/
+
+# Служебные файлы операционной системы Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Результаты работы транслятора (сгенерированные YAML)
+examples/*.yaml
+*.yaml.out
+output.yaml
