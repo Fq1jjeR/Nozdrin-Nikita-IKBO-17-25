@@ -27,7 +27,6 @@ def _translate(source: str) -> object:
     return yaml.safe_load(text)
 
 
-# --- Числа и базовые словари -----------------------------------------
 
 
 def test_simple_number_entry() -> None:
@@ -54,7 +53,6 @@ def test_empty_dict() -> None:
     assert result == {}
 
 
-# --- Многострочные комментарии ---------------------------------------
 
 
 def test_multiline_comment_ignored() -> None:
@@ -73,7 +71,6 @@ def test_comment_inside_dict() -> None:
     assert _translate(source) == {"a": 1.0, "b": 3.0}
 
 
-# --- Вложенные словари -----------------------------------------------
 
 
 def test_nested_dict_one_level() -> None:
@@ -102,7 +99,6 @@ def test_nested_dict_multiple_keys() -> None:
     }
 
 
-# --- Объявления констант ---------------------------------------------
 
 
 def test_constant_declaration() -> None:
@@ -123,7 +119,6 @@ def test_undeclared_constant_error() -> None:
         _translate("{ a -> unknown. }")
 
 
-# --- Константные выражения -------------------------------------------
 
 
 def test_const_expr_addition() -> None:
@@ -168,7 +163,6 @@ def test_const_expr_with_constant() -> None:
     assert _translate(source) == pytest.approx({"a": 12.56})
 
 
-# --- Функции abs() и min() -------------------------------------------
 
 
 def test_abs_function() -> None:
@@ -203,7 +197,6 @@ def test_min_function_with_constants() -> None:
     assert _translate(source) == {"r": -5.0}
 
 
-# --- Ошибки трансляции -----------------------------------------------
 
 
 def test_division_by_zero_error() -> None:
@@ -230,7 +223,6 @@ def test_syntax_error_integer_number() -> None:
         _translate("{ a -> 1. }")
 
 
-# --- Несколько элементов верхнего уровня ----------------------------
 
 
 def test_multiple_top_level_dicts() -> None:
@@ -250,7 +242,6 @@ def test_constants_and_dict_mixed() -> None:
     assert result == [{"a": 1.0}, {"b": 2.0}]
 
 
-# --- Формат вывода ---------------------------------------------------
 
 
 def test_output_is_valid_yaml() -> None:
