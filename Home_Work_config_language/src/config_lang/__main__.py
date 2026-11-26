@@ -1,4 +1,4 @@
-#Командная строка транслятора учебного языка в YAML.
+"""Командная строка транслятора учебного языка в YAML."""
 
 from __future__ import annotations
 
@@ -13,10 +13,10 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     """Разобрать аргументы командной строки.
 
     Args:
-        argv: Список аргументов; ``None`` для ``sys.argv[1:]``.
+        argv: Список аргументов; None для sys.argv[1:].
 
     Returns:
-        Объект с полями ``output`` (путь к файлу результата).
+        Объект с полями output (путь к файлу результата).
     """
     parser = argparse.ArgumentParser(
         prog="config_lang",
@@ -41,7 +41,7 @@ def run(argv: Sequence[str] | None = None) -> int:
         argv: Аргументы командной строки.
 
     Returns:
-        Код возврата: ``0`` при успехе, ``1`` при ошибке.
+        Код возврата: 0 при успехе, 1 при ошибке.
     """
     args = parse_args(argv)
     source = sys.stdin.read()
